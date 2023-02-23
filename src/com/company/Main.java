@@ -23,7 +23,7 @@ public class Main {
     static boolean useAutoIP = true;
 
     //Other state
-    static boolean retryClient = false;
+    //static boolean retryClient = false;
 
     static ArrayList adresser = new ArrayList();
 
