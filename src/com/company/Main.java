@@ -35,7 +35,7 @@ public class Main {
 
 
         Thread serverTråd = new Thread(new MinServerTråd());
-        //serverTråd.start();
+        serverTråd.start();
 
 
         try {
@@ -46,7 +46,7 @@ public class Main {
 
 
         Thread klientTråd = new Thread(new MinKlientTråd());
-        klientTråd.start();
+       // klientTråd.start();
 
 
         //TODO:
@@ -70,34 +70,37 @@ public class Main {
             try {
                 IP_ADDRESS = getLocalIpAddress();
                 update("SERVER: Automatic SERVER IP: " + IP_ADDRESS);
+                //Galaxy s10e IOT 10.90.17.158
             } catch (UnknownHostException e) {
                 e.printStackTrace();
             }
-            try {
-                update("SERVER: starting serversocket");
-                ServerSocket server = new ServerSocket(PORT);
+  //          while (true) {
+                try {
+                    update("SERVER: starting serversocket");
+                    ServerSocket server = new ServerSocket(PORT);
 
-                update("SERVER: start listening..");
-                socket = server.accept();
-                update("SERVER connection accepted");
-                OutputStream outstream = socket.getOutputStream();
-                PrintWriter output = new PrintWriter(outstream, true);
-                output.write("BESKEDEN KOMMER HER");
-                update("SERVER: Besked skrevet til output");
-                //Thread.sleep(50);
-                // output.write("NY BESKED");
-                //output.flush();
-                //update("SERVER: flush");
-
-
-            } catch (
-                    IOException e) {
-                update("oops!!");
-                throw new RuntimeException(e);
+                    update("SERVER: start listening..");
+                    socket = server.accept();
+                    update("SERVER connection accepted");
+                    OutputStream outstream = socket.getOutputStream();
+                    PrintWriter output = new PrintWriter(outstream, true);
+                    output.write("BESKEDEN KOMMER HER");
+                    update("SERVER: Besked skrevet til output");
+                    //Thread.sleep(50);
+                    // output.write("NY BESKED");
+                    //output.flush();
+                    //update("SERVER: flush");
 
 
-            }
-            update("SERVER (later): Automatic SERVER IP: " + IP_ADDRESS);
+                } catch (
+                        IOException e) {
+                    update("oops!!");
+                    throw new RuntimeException(e);
+
+
+                }
+                update("SERVER (later): Automatic SERVER IP: " + IP_ADDRESS);
+   //         }
         }
     }    //class MinServerTråd
 
