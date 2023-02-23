@@ -4,6 +4,7 @@ import java.io.*;
 import java.net.*;
 import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.Scanner;
 
 public class Main {
     static String info  = "LOG: \n";
@@ -82,22 +83,24 @@ public class Main {
                     update("SERVER connection accepted");
                     DataInputStream instream = new DataInputStream(klientSocket.getInputStream());
                     DataOutputStream outstream = new DataOutputStream(klientSocket.getOutputStream());
-                    BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+                    Scanner input = new Scanner(System.in);
 
                     boolean carryOn = true;
                     while(carryOn) {
 
                         String str = (String) instream.readUTF();
                         System.out.println("Client says: " + str);
-                        String answer = br.readLine();
+                        update("Type message (Enter sends message)");
+                        String answer = input.nextLine();
                         outstream.writeUTF(answer);
-                                outstream.flush();
-                        carryOn = !str.equalsIgnoreCase("goodbye");
+                        outstream.flush();
+                        carryOn = !str.equalsIgnoreCase("bye");
 
                     }
                     serverSocket.close();
                     klientSocket.close();
                     instream.close();
+                    input.close();
                 } catch (
                         IOException e) {
                     update("oops!!");
