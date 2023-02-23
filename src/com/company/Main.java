@@ -6,12 +6,6 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 
 public class Main {
-    //static String serverIP;
-    //Button startKlient, startServer;
-    //TextView ipInfo;
-
-    //IP DTU DELL 192.168.50.239
-
     static String info  = "LOG: \n";
 
     static final int PORT = 4444;
@@ -35,6 +29,7 @@ public class Main {
 
 
         Thread serverTråd = new Thread(new MinServerTråd());
+
        serverTråd.start();
 
 
@@ -66,7 +61,7 @@ public class Main {
     static class MinServerTråd implements Runnable {
         @Override
         public void run() {
-   /*
+            while (true) {
             try {
                 IP_ADDRESS = getLocalIpAddress();
                 update("SERVER: Automatic SERVER IP: " + IP_ADDRESS);
@@ -74,31 +69,35 @@ public class Main {
             } catch (UnknownHostException e) {
                 e.printStackTrace();
             }
-            */
 
-  //          while (true) {
+
+
                 try {
 
                    // update("SERVER: starting serversocket");
                     ServerSocket serverSocket = new ServerSocket(4444);
 
-                  //  update("SERVER: start listening..");
+                    update("SERVER: start listening..");
                     Socket klientSocket = serverSocket.accept();
                     update("SERVER connection accepted");
                     DataInputStream instream = new DataInputStream(klientSocket.getInputStream());
-                    //PrintWriter output = new PrintWriter(outstream, true);
-                    String str = (String)  instream.readUTF();
-                    System.out.println("Server siger: " +str);
+                    DataOutputStream outstream = new DataOutputStream(klientSocket.getOutputStream());
+                    BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+
+                    boolean carryOn = true;
+                    while(carryOn) {
+
+                        String str = (String) instream.readUTF();
+                        System.out.println("Client says: " + str);
+                        String answer = br.readLine();
+                        outstream.writeUTF(answer);
+                                outstream.flush();
+                        carryOn = !str.equalsIgnoreCase("goodbye");
+
+                    }
                     serverSocket.close();
-
-//                    output.write("BESKEDEN KOMMER HER");
-  //                  update("SERVER: Besked skrevet til output");
-                    //Thread.sleep(50);
-                    // output.write("NY BESKED");
-                    //output.flush();
-                    //update("SERVER: flush");
-
-
+                    klientSocket.close();
+                    instream.close();
                 } catch (
                         IOException e) {
                     update("oops!!");
@@ -107,7 +106,7 @@ public class Main {
 
                 }
                 //update("SERVER (later): Automatic SERVER IP: " + IP_ADDRESS);
-   //         }
+            }
         }
     }    //class MinServerTråd
 
@@ -126,8 +125,6 @@ public class Main {
             while (ee.hasMoreElements())
             {
                 i = (InetAddress) ee.nextElement();
-                System.out.println(i.getHostAddress());
-                update("getLocalIpAddress() gave "+ i.getHostAddress());
                 adresser.add(i.getHostAddress());
             }
         }
