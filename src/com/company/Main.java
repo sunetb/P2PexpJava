@@ -154,7 +154,7 @@ public class Main {
 
                 //Test:
                 //IP_ADDRESS = "192.168.50.239";
-                Socket klientsocket = new Socket("10.90.17.157", PORT);//Fra emulator, indstillinger
+                Socket klientsocket = new Socket("10.90.17.181", 4444);//Fra emulator, indstillinger
 
                 //update("CLIENT: client connected to "+ IP_ADDRESS);
                 //input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -163,19 +163,27 @@ public class Main {
 
                 DataOutputStream out = new DataOutputStream(klientsocket.getOutputStream());
                 out.writeUTF("hej");
+
                 out.flush();
                 out.close();
+
+                DataOutputStream out1 = new DataOutputStream(klientsocket.getOutputStream());
+                out1.writeUTF("hej");
+
+                out1.flush();
+                out1.close();
+
                 klientsocket.close();
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
 
-            boolean success = false;
+ /*           boolean success = false;
             update("CLIENT: Try reading");
             while (true) {
 
                 try {
-/*                    boolean klar = input.ready();
+                    boolean klar = input.ready();
                     //try hard
                     if (retryClient)
                         klar = true;
@@ -188,7 +196,7 @@ public class Main {
                     else{
                         if(!retryClient) update("Ready to read");
                         else update("Force read. Ready now? "+ input.ready());
-                    }*/
+                    }
                     final String message = input.readLine();
                     System.out.println(message);
                     if (message != null) {
@@ -209,7 +217,7 @@ public class Main {
                 }
                 update("end loop");
             }
-            update(success ? "CLIENT: Done reading" : "ØV ikke klar");
+            update(success ? "CLIENT: Done reading" : "ØV ikke klar");*/
         }//Run()
     } //class MinKlientTråd
 
