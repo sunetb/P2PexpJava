@@ -227,7 +227,5 @@ public class Main {
 
     }
 
-    static String cleanIt (String s){
-        return s.replaceAll("/", "");
-    }
+
 } //Main class
