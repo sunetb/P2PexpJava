@@ -35,7 +35,7 @@ public class Main {
 
 
         Thread serverTråd = new Thread(new MinServerTråd());
-       // serverTråd.start();
+       serverTråd.start();
 
 
         try {
@@ -46,7 +46,7 @@ public class Main {
 
 
         Thread klientTråd = new Thread(new MinKlientTråd());
-        klientTråd.start();
+        //klientTråd.start();
 
 
         //TODO:
@@ -80,7 +80,7 @@ public class Main {
                 try {
 
                    // update("SERVER: starting serversocket");
-                    ServerSocket serverSocket = new ServerSocket(PORT);
+                    ServerSocket serverSocket = new ServerSocket(4444);
 
                   //  update("SERVER: start listening..");
                     Socket klientSocket = serverSocket.accept();
@@ -169,7 +169,7 @@ public class Main {
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
-
+/*
             boolean success = false;
             update("CLIENT: Try reading");
             while (true) {
@@ -188,7 +188,7 @@ public class Main {
                     else{
                         if(!retryClient) update("Ready to read");
                         else update("Force read. Ready now? "+ input.ready());
-                    }*/
+                    }
                     final String message = input.readLine();
                     System.out.println(message);
                     if (message != null) {
@@ -209,7 +209,7 @@ public class Main {
                 }
                 update("end loop");
             }
-            update(success ? "CLIENT: Done reading" : "ØV ikke klar");
+            update(success ? "CLIENT: Done reading" : "ØV ikke klar");*/
         }//Run()
     } //class MinKlientTråd
 
