@@ -4,6 +4,7 @@ import java.io.*;
 import java.net.*;
 import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.Scanner;
 
 public class Main {
     //static String serverIP;
@@ -91,14 +92,6 @@ public class Main {
                     System.out.println("Server siger: " +str);
                     serverSocket.close();
 
-//                    output.write("BESKEDEN KOMMER HER");
-  //                  update("SERVER: Besked skrevet til output");
-                    //Thread.sleep(50);
-                    // output.write("NY BESKED");
-                    //output.flush();
-                    //update("SERVER: flush");
-
-
                 } catch (
                         IOException e) {
                     update("oops!!");
@@ -138,42 +131,44 @@ public class Main {
     static class MinKlientTråd  implements Runnable {
         @Override
         public void run() {
-           // BufferedReader input;
-            //Socket socket;
+
             try {
+                Scanner input = new Scanner(System.in);
+                update("Please write ip of server (Type 'c' to use hardcoded: 10.90.17.181) ");
+                String ip = input.nextLine();
+                if (ip.equalsIgnoreCase("c"))
+                    ip = "10.90.17.181";
 
+                update("CLIENT: starting client socket ");
+                Socket klientsocket = new Socket(ip, 4444);//Fra emulator, indstillinger
 
-              //  update("CLIENT: starting client socket on "+IP_ADDRESS);
+                update("CLIENT: client connected ");
 
-
-                //socket = new Socket(serverIP, 5050);
-                //socket = new Socket("localhost/127.0.0.1");
-                //socket = new Socket("10.212.178.72", 5050);//fysisk s10e indstillinger
-
-                //socket = new Socket("10.80.0.138", 5050);//fysisk s7 indstillinger
-
-                //Test:
-                //IP_ADDRESS = "192.168.50.239";
-                Socket klientsocket = new Socket("10.90.17.181", 4444);//Fra emulator, indstillinger
-
-                //update("CLIENT: client connected to "+ IP_ADDRESS);
-                //input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-                //System.out.println(input);
-                //update("CLIENT: Got inputstream");
-
+                DataInputStream instream = new DataInputStream(klientsocket.getInputStream());
                 DataOutputStream out = new DataOutputStream(klientsocket.getOutputStream());
-                out.writeUTF("hej");
+                update("CLIENT: made outputstream");
+                boolean carryOn = true;
+                while(carryOn) {
 
-                out.flush();
+                    update("Type message (Enter sends the message)");
+                    String besked = input.nextLine();
+                    out.writeUTF(besked);
+                    //update("CLIENT: wrote to outputstream");
+
+                    out.flush();
+                    //update("CLIENT: flushed");
+                    String messageFromServer = instream.readUTF();
+                    update("Server says: " +messageFromServer);
+                    carryOn = !besked.equalsIgnoreCase("bye");
+                }
+                input.close();
+                update("CLIENT: closed Scanner");
+                instream.close();
+                update("CLIENT: closed inputstream");
                 out.close();
-
-                DataOutputStream out1 = new DataOutputStream(klientsocket.getOutputStream());
-                out1.writeUTF("hej");
-
-                out1.flush();
-                out1.close();
-
+                update("CLIENT: closed outputstream");
                 klientsocket.close();
+                update("CLIENT: closed socket");
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
