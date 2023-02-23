@@ -16,7 +16,7 @@ public class Main {
 
     static final int PORT = 4444;
 
-    static String IP_ADDRESS = "127.0.0.1";
+    static String IP_ADDRESS = "10.90.17.157";
 
     //Debug state
     static boolean useLocalhost = false; //overrules useAutoIP
@@ -35,7 +35,7 @@ public class Main {
 
 
         Thread serverTråd = new Thread(new MinServerTråd());
-        serverTråd.start();
+       // serverTråd.start();
 
 
         try {
@@ -46,7 +46,7 @@ public class Main {
 
 
         Thread klientTråd = new Thread(new MinKlientTråd());
-       // klientTråd.start();
+        klientTråd.start();
 
 
         //TODO:
@@ -66,7 +66,7 @@ public class Main {
     static class MinServerTråd implements Runnable {
         @Override
         public void run() {
-            Socket socket;
+   /*
             try {
                 IP_ADDRESS = getLocalIpAddress();
                 update("SERVER: Automatic SERVER IP: " + IP_ADDRESS);
@@ -74,18 +74,25 @@ public class Main {
             } catch (UnknownHostException e) {
                 e.printStackTrace();
             }
+            */
+
   //          while (true) {
                 try {
-                    update("SERVER: starting serversocket");
-                    ServerSocket server = new ServerSocket(PORT);
 
-                    update("SERVER: start listening..");
-                    socket = server.accept();
+                   // update("SERVER: starting serversocket");
+                    ServerSocket serverSocket = new ServerSocket(PORT);
+
+                  //  update("SERVER: start listening..");
+                    Socket klientSocket = serverSocket.accept();
                     update("SERVER connection accepted");
-                    OutputStream outstream = socket.getOutputStream();
-                    PrintWriter output = new PrintWriter(outstream, true);
-                    output.write("BESKEDEN KOMMER HER");
-                    update("SERVER: Besked skrevet til output");
+                    DataInputStream instream = new DataInputStream(klientSocket.getInputStream());
+                    //PrintWriter output = new PrintWriter(outstream, true);
+                    String str = (String)  instream.readUTF();
+                    System.out.println("Server siger: " +str);
+                    serverSocket.close();
+
+//                    output.write("BESKEDEN KOMMER HER");
+  //                  update("SERVER: Besked skrevet til output");
                     //Thread.sleep(50);
                     // output.write("NY BESKED");
                     //output.flush();
@@ -99,7 +106,7 @@ public class Main {
 
 
                 }
-                update("SERVER (later): Automatic SERVER IP: " + IP_ADDRESS);
+                //update("SERVER (later): Automatic SERVER IP: " + IP_ADDRESS);
    //         }
         }
     }    //class MinServerTråd
@@ -131,10 +138,12 @@ public class Main {
     static class MinKlientTråd  implements Runnable {
         @Override
         public void run() {
-            BufferedReader input;
-            Socket socket;
+           // BufferedReader input;
+            //Socket socket;
             try {
-                update("CLIENT: starting client socket on "+IP_ADDRESS);
+
+
+              //  update("CLIENT: starting client socket on "+IP_ADDRESS);
 
 
                 //socket = new Socket(serverIP, 5050);
@@ -142,17 +151,21 @@ public class Main {
                 //socket = new Socket("10.212.178.72", 5050);//fysisk s10e indstillinger
 
                 //socket = new Socket("10.80.0.138", 5050);//fysisk s7 indstillinger
-                if (useAutoIP){
-                    update("CLIENT: Using Auto IP");
 
-                }
                 //Test:
-                IP_ADDRESS = "192.168.50.239";
-                socket = new Socket(IP_ADDRESS, PORT);//Fra emulator, indstillinger
+                //IP_ADDRESS = "192.168.50.239";
+                Socket klientsocket = new Socket("10.90.17.157", PORT);//Fra emulator, indstillinger
 
-                update("CLIENT: client connected to "+ IP_ADDRESS);
-                input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-                update("CLIENT: Got inputstream");
+                //update("CLIENT: client connected to "+ IP_ADDRESS);
+                //input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                //System.out.println(input);
+                //update("CLIENT: Got inputstream");
+
+                DataOutputStream out = new DataOutputStream(klientsocket.getOutputStream());
+                out.writeUTF("hej");
+                out.flush();
+                out.close();
+                klientsocket.close();
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -162,7 +175,7 @@ public class Main {
             while (true) {
 
                 try {
-                    boolean klar = input.ready();
+/*                    boolean klar = input.ready();
                     //try hard
                     if (retryClient)
                         klar = true;
@@ -175,8 +188,9 @@ public class Main {
                     else{
                         if(!retryClient) update("Ready to read");
                         else update("Force read. Ready now? "+ input.ready());
-                    }
+                    }*/
                     final String message = input.readLine();
+                    System.out.println(message);
                     if (message != null) {
                         //    MainActivity.this.runOnUiThread(new Runnable() {
                         //      @Override
